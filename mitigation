@@ -1,0 +1,46 @@
+ASP.NET (MVC) :-
+
+-->In Asp.net Framework we have web.config file (configuration file) in which we can specify attibute as X-frame-options:Deny , SameOrigin ,etc .,  to Mitigate from clickjacking in web applications.
+
+-->In Web.config file add this element .
+(Path :-    C:\Windows\Microsoft.NET\Framework\v2.0.50727\CONFIG\web.config ) 
+(Note: v2.0.50727 is framework version , you may have installed different version . Or open the project in visual studio and solution explorer ).
+
+
+
+ <system.webServer>
+    <httpProtocol>
+      <customHeaders>
+        <add name="X-Frame-Options" value="SAMEORIGIN" />
+      </customHeaders>
+    </httpProtocol>
+  </system.webServer>
+
+
+--> Build your application and start IIS server and capture HTTP request in burpsuite, you can see X-Frame-Options:SAMEORIGIN added in Response header.
+
+
+
+
+
+ASP.NET CORE (MVC):-
+
+--> In Asp.net Core we dont have web.config file . So, to mitigate clickjacking in web applications we have to add the X-Frame-Options header inside Configure() method in statup.cs file  which can be found in solution explorer.
+
+--> Open statup.cs file and search for Configure() method.
+Just add this code inside the method.
+
+ app.Use(async (context, next) =>
+            {
+                context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
+                await next();
+            });
+   
+   
+--> Rebuild your application and start IIS server and capture HTTP request in burpsuite, you can see X-Frame-Options:SAMEORIGIN added in Response header.
+
+
+
+
+
+           
